@@ -11,12 +11,16 @@
 	 * @type {any}
 	 */
 	export let ingredient_quantity= '';
+
+	export let ingredientIndex;
+	export let subtitleIndex;
 </script>
 
 <div class="ingredientContainer">
 	<div class="subContainer">
 		<p>Ingredient:</p>
 		<input
+		name='recipe[subtitle][{subtitleIndex}][ingredients][{ingredientIndex}][name]'
 			type="text"
 			bind:value={ingredient_name}
 			placeholder="Type the name of the ingredient here.."
@@ -25,6 +29,7 @@
 	<div class="subContainer">
 		<p>Quantity:</p>
 		<input
+		name='recipe[subtitle][{subtitleIndex}][ingredients][{ingredientIndex}][quantity]'
 			type="number"
 			bind:value={ingredient_quantity}
 			placeholder="Type the desired quantity here in grams..."

@@ -1,7 +1,10 @@
 <script>
+	import { sendXHR } from '../../utils/requester';
 	import IngredientsForm from './IngredientsForm.svelte';
 	import StepsForm from './StepsForm.svelte';
 	import TitleForm from './TitleForm.svelte';
+
+	let recipeTitle ="";
 	/**
 	 * @type {any[]}
 	 */
@@ -18,20 +21,20 @@
 	let stepscontainers = [];
 
 	const addIngredientsField = () => {
-		ingredientsSubtitles = [...ingredientsSubtitles, {subtitle :'subtitle' + ingredientsSubtitles.length}];
-	}
+		ingredientsSubtitles = [
+			...ingredientsSubtitles,
+			{ subtitle: 'subtitle' + ingredientsSubtitles.length }
+		];
+	};
 
 	const addIngredient = (/** @type {string} */ subtitle) => {
-		ingredients = [
-			...ingredients,
-			{ subtitle: subtitle, name: '', quantity: '' }
-		];
+		ingredients = [...ingredients, { subtitle: subtitle, name: '', quantity: '' }];
 	};
 
 	const removeIngredientsField = () => {
 		ingredientsSubtitles = [...ingredientsSubtitles];
 		ingredientsSubtitles.splice(ingredientsSubtitles.length - 1, 1);
-	}
+	};
 
 	const removeIngredient = () => {
 		ingredients = [...ingredients];
@@ -42,31 +45,56 @@
 		stepscontainers = [...stepscontainers, { title: '', content: '' }];
 	};
 
-	const removeStepsField = () =>{
+	const removeStepsField = () => {
 		stepscontainers = [...stepscontainers];
 		stepscontainers.splice(stepscontainers.length - 1, 1);
+	};
+
+	/**
+	 * @param {any} event
+	 */
+	async function handleSubmit(event) {
+
+		console.log(event.target.closest('form'));
+		const recipeData = {
+			title: recipeTitle,
+			ingredients: ingredients,
+			steps: stepscontainers
+		};
+	
+
+		const request = await sendXHR('/create-recipe', {}, event)
+
+
 	}
+
 </script>
 
-<div class="formContainer">
-	<TitleForm title="Recipe Name" />
+<form on:submit|preventDefault={handleSubmit}>
+	<TitleForm bind:title={recipeTitle} />
 	<!--  make a component out of this (ingredientslist and ingredientssubtitles in there) -->
-	{#each ingredientsSubtitles as subtitle}
+	{#each ingredientsSubtitles as subtitle, index}
 		<div class="allIngredientsContainer">
 			<div class="subtitleContainer">
-				<input type="text" class="ingredientsSubtitle" bind:value={subtitle.subtitle} />
-				<button on:click={() => {addIngredient(subtitle.subtitle);}}>+I</button>
+				<input name='recipe[subtitle][{index}][name]' type="text" class="ingredientsSubtitle" bind:value={subtitle.subtitle} />
+				<button
+					on:click={() => {
+						addIngredient(subtitle.subtitle);
+					}}>+I</button
+				>
 				<button on:click={removeIngredient}>-I</button>
 			</div>
 			<!--  make a component out of this (ingredientslist in there) -->
 			<div class="ingredientsContainer">
-				{#each ingredients as container}
+				{#each ingredients as container, ingredientIndex}
 					{#if container.subtitle === subtitle.subtitle}
-					<IngredientsForm
-						bind:ingredient_subtitle={subtitle.subtitle}
-						bind:ingredient_name={container.name}
-						bind:ingredient_quantity={container.quantity}
-					/>
+						<IngredientsForm
+							bind:ingredient_subtitle={subtitle.subtitle}
+							bind:ingredient_name={container.name}
+							bind:ingredient_quantity={container.quantity}
+							subtitleIndex={ index}
+							ingredientIndex={ ingredientIndex + 'i'}
+						/>
 					{/if}
 				{/each}
 			</div>
@@ -81,10 +109,11 @@
 	</div>
 	<button on:click={addStepsField}>+</button>
 	<button on:click={removeStepsField}>-</button>
-</div>
+	<button type="submit">Create Recipe</button>
+</form>
 
 <style>
-	.formContainer {
+	form {
 		width: 50%;
 		height: auto;
 		display: flex;
@@ -97,7 +126,7 @@
 		padding: 25px;
 	}
 
-	.allIngredientsContainer{
+	.allIngredientsContainer {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
@@ -105,7 +134,7 @@
 		margin-top: 1rem;
 	}
 
-	.subtitleContainer{
+	.subtitleContainer {
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;

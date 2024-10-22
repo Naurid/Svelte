@@ -5,15 +5,23 @@ header('Content-Type: application/json');
 
 $inputData = $_POST; 
 
+$recipeId = $db->create('recipes',[
+    'name'=>$_POST['recipe']['title']
+]);
 
-$recipes = $db->create('recipes',
-                        $data=[
-                            'id'=> NULL,
-                            'name'=> $inputData['name'],
-                                ]
-);
+foreach ($_POST['recipe']['subtitle'] as $subtitle) {
+    $subtitleName = $subtitle['name'];
+    foreach ($subtitle['ingredients'] as $key => $ingredient) {
+        $db->create('ingredients',[
+            'recipe_id'=>$recipeId,
+            'subtitle'=>$subtitleName,
+            'name'=>$ingredient['name'],
+            'quantity'=>$ingredient['quantity']
+        ]);
+    }
+}
 
 finish([
     'responseCode'=>200,
-    'data'=> $recipes,
+    'data'=> $_POST,
 ]);

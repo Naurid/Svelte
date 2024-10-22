@@ -2,7 +2,7 @@
 	import { sendXHR } from '../../utils/requester';
 
 	export let title = '';
-    let recipeTitle = '';
+    export let recipeTitle = '';
 
 	// async function handleSubmit(){
 	//     if(title.trim()){
@@ -25,7 +25,7 @@
 
 <div class="titleContainer">
 	<h2>{title}</h2>
-	<input type="text" placeholder="Type the name of your recipe here" bind:value={recipeTitle}/>
+	<input name='recipe[title]' type="text" placeholder="Type the name of your recipe here" bind:value={recipeTitle}/>
 </div>
 
 <style>

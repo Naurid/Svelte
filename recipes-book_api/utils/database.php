@@ -30,6 +30,7 @@ class Database {
 
     public function create($table, $data) {
         $keys = implode(',', array_keys($data));
+        echo $keys;
         $values = ':' . implode(',:', array_keys($data));
         $sql = "INSERT INTO $table ($keys) VALUES ($values)";
         try {
@@ -38,6 +39,7 @@ class Database {
             return $this->conn->lastInsertId();
         } catch (\Throwable $th) {
             //throw $th;
+            error_log($th->getMessage(),3, 'errors.log');
             finish([
                 "responseCode"=>400,
                 "message"=>"une erreur avec la dataBase est survenue ! Réessayez plus tard."
@@ -76,6 +78,7 @@ class Database {
             $stmt->execute($allData);
             return $stmt->rowCount();
         } catch (\Throwable $th) {
+            error_log($th->getMessage(),3, 'errors.log');
             finish([
                 "responseCode"=>400,
                 "message"=>"une erreur avec la dataBase est survenue ! Réessayez plus tard."
@@ -96,6 +99,7 @@ class Database {
             $stmt->execute($datawhere);
             return $stmt->rowCount();
         } catch (\Throwable $th) {
+            error_log($th->getMessage(),3, 'errors.log');
                         finish([
                 "responseCode"=>400,
                 "message"=>"une erreur avec la dataBase est survenue ! Réessayez plus tard."
@@ -137,6 +141,7 @@ class Database {
             $stmt->execute($allData);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (\Throwable $th) {
+            error_log($th->getMessage(),3, 'errors.log');
             finish([
                 "responseCode"=>400,
                 "message"=>"une erreur avec la dataBase est survenue ! Réessayez plus tard."

@@ -1,28 +1,38 @@
-export function sendXHR(url, data = {}) {
+export function sendXHR(url, data = {}, event) {
     return new Promise((resolve, reject) => {
         var xhr = new XMLHttpRequest();
 
-        // Encoder les données en format "application/x-www-form-urlencoded"
-        var params = Object.keys(data).map(function(key) {
-            return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
-        }).join('&');
+        // Encoder les données du paramètre `data` en format "application/x-www-form-urlencoded"
+        var formData = new FormData(event.target.closest('form'));
+        console.log(formData.entries() );
+        for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                var value = data[key];
+                if (typeof value == 'object') {
+                    value=JSON.stringify(value);
+                }
+                formData.append(key, value);
+            }
+        }
 
+        // Initialiser la requête avec la méthode POST
         xhr.open('POST', 'http://localhost:8080' + url, true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
+        // Définir ce qui se passe lorsque la requête est terminée avec succès
         xhr.onload = function() {
             if (xhr.status >= 200 && xhr.status < 300) {
                 resolve(xhr.responseText);  // Résoudre la promesse avec la réponse
             } else {
-                reject('Erreur de requête. Statut : ' + xhr.status);  // Rejeter la promesse en cas d'erreur HTTP
+                reject('Erreur de requête. Statut : ' + xhr.status);  // Rejeter en cas de statut HTTP d'erreur
             }
         };
 
+        // Définir ce qui se passe en cas d'erreur réseau
         xhr.onerror = function() {
-            reject("Erreur réseau");  // Rejeter la promesse en cas d'erreur réseau
+            reject("Erreur réseau");  // Rejeter la promesse en cas de problème de réseau
         };
 
-        // Envoyer les paramètres encodés
-        xhr.send(params);
+        // Envoyer les paramètres encodés dans le corps de la requête POST
+        xhr.send(formData);
     });
 }
