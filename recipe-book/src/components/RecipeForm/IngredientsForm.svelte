@@ -2,6 +2,10 @@
 	/**
 	 * @type {string}
 	 */
+	 export let ingredient_subtitle = '';
+	/**
+	 * @type {string}
+	 */
 	export let ingredient_name = '';
 	/**
 	 * @type {any}
