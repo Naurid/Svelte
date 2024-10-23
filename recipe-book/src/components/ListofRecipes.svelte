@@ -15,6 +15,7 @@
             debug = await sendXHR('/get-recipes');
             //console.log(debug); 
             parsedData = JSON.parse(debug);
+          ;
             recipes = parsedData['data']// Afficher la réponse dans la console
         } catch (error) {
             console.error(error);  // Gérer les erreurs

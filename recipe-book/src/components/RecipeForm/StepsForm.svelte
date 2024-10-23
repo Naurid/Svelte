@@ -2,17 +2,18 @@
 
     export let title ='';
     export let content ='';
+	export let stepIndex;
     
 </script>
 
 <div class="container">
 	<div class="subContainer">
 		<p>Step title</p>
-		<input type="text" class="stepTitle" bind:value={title}/>
+		<input name="recipe[steps][{stepIndex}][title]" type="text" class="stepTitle" bind:value={title}/>
 	</div>
 	<div class="contentContainer">
 		<p>Step content</p>
-		<input type="text" class="stepContent" bind:value={content}/>
+		<input name="recipe[steps][{stepIndex}][content]" type="text" class="stepContent" bind:value={content}/>
 	</div>
 </div>
 

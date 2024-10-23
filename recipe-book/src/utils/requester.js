@@ -1,9 +1,16 @@
 export function sendXHR(url, data = {}, event) {
+    
+    
     return new Promise((resolve, reject) => {
         var xhr = new XMLHttpRequest();
-
+        var formData;
         // Encoder les données du paramètre `data` en format "application/x-www-form-urlencoded"
-        var formData = new FormData(event.target.closest('form'));
+        if (event) {
+            formData = new FormData(event.target.closest('form'));
+        }else{
+            formData = new FormData();
+        }
+       
         console.log(formData.entries() );
         for (const key in data) {
             if (Object.prototype.hasOwnProperty.call(data, key)) {

@@ -1,1 +1,1 @@
-SQLSTATE[42S02]: Base table or view not found: 1146 Table 'recipe_book.recipe' doesn't exist
+SQLSTATE[42S02]: Base table or view not found: 1146 Table 'recipe_book.recipe' doesn't existSQLSTATE[23000]: Integrity constraint violation: 1048 Column 'step_position' cannot be nullSQLSTATE[23000]: Integrity constraint violation: 1048 Column 'step_position' cannot be null

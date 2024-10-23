@@ -8,6 +8,7 @@
 <div class="mainBody">
 	<NavBar />
 	<Form/>
+	<ListofRecipes/>
 </div>
 
 <style>

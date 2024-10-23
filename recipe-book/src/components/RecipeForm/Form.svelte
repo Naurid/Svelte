@@ -76,13 +76,14 @@
 	{#each ingredientsSubtitles as subtitle, index}
 		<div class="allIngredientsContainer">
 			<div class="subtitleContainer">
-				<input name='recipe[subtitle][{index}][name]' type="text" class="ingredientsSubtitle" bind:value={subtitle.subtitle} />
+				<input name='recipe[subtitle][{index}][name]' type="text" class="ingredientsSubtitle" value={subtitle.subtitle} />
 				<button
+				type="button"
 					on:click={() => {
 						addIngredient(subtitle.subtitle);
 					}}>+I</button
 				>
-				<button on:click={removeIngredient}>-I</button>
+				<button type="button" on:click={removeIngredient}>-I</button>
 			</div>
 			<!--  make a component out of this (ingredientslist in there) -->
 			<div class="ingredientsContainer">
@@ -92,7 +93,7 @@
 							bind:ingredient_subtitle={subtitle.subtitle}
 							bind:ingredient_name={container.name}
 							bind:ingredient_quantity={container.quantity}
-							subtitleIndex={ index}
+							subtitleIndex={index}
 							ingredientIndex={ ingredientIndex + 'i'}
 						/>
 					{/if}
@@ -100,16 +101,19 @@
 			</div>
 		</div>
 	{/each}
-	<button on:click={addIngredientsField}>+F</button>
-	<button on:click={removeIngredientsField}>-F</button>
+	<button type="button" on:click={addIngredientsField}>+F</button>
+	<button type="button" on:click={removeIngredientsField}>-F</button>
 	<div class="ingredientsContainer">
-		{#each stepscontainers as container}
-			<StepsForm bind:title={container.title} bind:content={container.content} />
+		{#each stepscontainers as container, index}
+			<StepsForm 
+			bind:title={container.title} 
+			bind:content={container.content}
+			stepIndex={index} />
 		{/each}
 	</div>
-	<button on:click={addStepsField}>+</button>
-	<button on:click={removeStepsField}>-</button>
-	<button type="submit">Create Recipe</button>
+	<button type="button" on:click={addStepsField}>+</button>
+	<button type="button" on:click={removeStepsField}>-</button>
+	<button type="submit" tabindex="-1">Create Recipe</button>
 </form>
 
 <style>

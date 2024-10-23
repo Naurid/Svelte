@@ -1,5 +1,6 @@
 <div class="navBody">
 	<h1>Recipes</h1>
+	<a href="/recettes"><h1>Liste</h1></a>
 </div>
 
 <style>
