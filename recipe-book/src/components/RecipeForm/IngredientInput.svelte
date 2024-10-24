@@ -74,7 +74,8 @@
 	input {
 		width: 80%;
 		height: 3rem;
-		border-radius: 1rem;
+		border-radius: .5rem;
+		border: 1px solid;
 		padding-left: 1rem;
 	}
 

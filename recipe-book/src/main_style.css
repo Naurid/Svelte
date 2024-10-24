@@ -1,0 +1,12 @@
+:root{
+    --backgroundcolor : rgb(226, 232, 240); /*slate 200*/
+    --navbar-background-color : rgb(100, 116, 139, 0.5); /*slate 500*/
+    --navbar-text-color  : rgb(15, 23, 42); /*slate 900*/
+
+    --button-active : rgb(51, 65, 85); /*slate 700*/
+    --button-active-hover : rgb(226, 232, 240); /*slate 200*/
+    --button-text-color : rgb(248, 250, 252);/*slate 50*/
+    --button-text-color-hover : rgb(30, 41, 59);/*slate 800*/
+
+    --form-background-color :  rgb(203, 213, 225); /*slate 300*/
+}

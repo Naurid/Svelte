@@ -1,20 +1,33 @@
 <script>
-
-    export let title ='';
-    export let content ='';
+	export let title = '';
+	export let content = '';
 	export let stepIndex;
-    
+
+	/**
+	 * @param {{ target: any; }} event
+	 */
+	function textAreaAdjust(event) {
+		const textarea = event.target;
+		textarea.style.height = 'auto'; // Reset the height to auto to calculate the new height
+		textarea.style.height = textarea.scrollHeight + 'px'; // Set height to match the scrollHeight
+	}
 </script>
 
 <div class="container">
-	<div class="subContainer">
-		<p>Step title</p>
-		<input name="recipe[steps][{stepIndex}][title]" type="text" class="stepTitle" bind:value={title}/>
-	</div>
-	<div class="contentContainer">
-		<p>Step content</p>
-		<input name="recipe[steps][{stepIndex}][content]" type="text" class="stepContent" bind:value={content}/>
-	</div>
+	<input
+		name="recipe[steps][{stepIndex}][title]"
+		type="text"
+		class="stepTitle"
+		bind:value={title}
+		placeholder="Type the name of the step here"
+	/>
+	<textarea
+		on:input={textAreaAdjust}
+		name="recipe[steps][{stepIndex}][content]"
+		class="stepContent"
+		bind:value={content}
+		placeholder="Type the content of the step here"
+	/>
 </div>
 
 <style>
@@ -22,41 +35,24 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		align-items: center;
+		align-items: flex-start;
 		gap: 1rem;
 		width: 100%;
 	}
 
-    .subContainer{
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .contentContainer{
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-
-
-	.subContainer input {
-		width: 80%;
+	.stepTitle {
+		width: 75%;
 		height: 3rem;
-		border-radius: 1rem;
-		padding-left: 1rem;
-	}
-    
-	.contentContainer input {
-		width: 80%;
-		height: 6rem;
-		border-radius: 1rem;
+		border-radius: 0.5rem;
+		border: 1px solid;
 		padding-left: 1rem;
 	}
 
-    p {
-		text-align: start;
-        font-family: system-ui,
+	.stepContent {
+		width: 95%;
+		height: 6rem;
+		font-family:
+			system-ui,
 			-apple-system,
 			BlinkMacSystemFont,
 			'Segoe UI',
@@ -66,7 +62,10 @@
 			Cantarell,
 			'Open Sans',
 			'Helvetica Neue',
-			sans-serif;;
-		margin: 0;
+			sans-serif;
+		overflow: hidden;
+		border-radius: 0.5rem;
+		border: 1px solid;
+		padding: 15px;
 	}
 </style>
