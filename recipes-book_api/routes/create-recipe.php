@@ -16,7 +16,8 @@ foreach ($_POST['recipe']['subtitle'] as $subtitle) {
             'recipe_id'=>$recipeId,
             'subtitle'=>$subtitleName,
             'name'=>$ingredient['name'],
-            'quantity'=>$ingredient['quantity']
+            'quantity'=>$ingredient['quantity'],
+            'ingredient_type'=>$ingredient['ingredient_type']
         ]);
     }
 }

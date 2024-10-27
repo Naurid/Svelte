@@ -21,6 +21,22 @@
 	 */
 	let stepscontainers = [];
 
+	let imageURL = '';
+
+	const handleImageChange =(/** @type {{ target: { files: any[]; }; }} */ event)=>{
+		const file = event.target.files[0];
+		
+		if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        imageURL = reader.result; // Update the imageUrl with the base64 data URL
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert('Please select a valid image file.');
+    }
+	}
+
 	const addIngredientsField = () => {
 		ingredientsSubtitles = [
 			...ingredientsSubtitles,
@@ -60,14 +76,18 @@
 	 * @param {any} event
 	 */
 	async function handleSubmit(event) {
-		console.log(event.target.closest('form'));
+		console.log("submit");
 
-		const request = await sendXHR('/create-recipe', {}, event);
+		//const request = await sendXHR('/create-recipe', {}, event);
 	}
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
-	<TitleForm bind:recipeTitle={recipeTitle} />
+	<div class="titleContainer">
+		<TitleForm bind:recipeTitle={recipeTitle} />
+		<label style="background-image: url({imageURL});" for="upload-photo">Browse...</label>
+		<input type="file" accept="image/png, image/jpg, image/jpeg" id="upload-photo" bind:value={imageURL} on:change={handleImageChange}/>
+	</div>
 	<!--  make a component out of this (ingredientslist and ingredientssubtitles in there) -->
 	{#each ingredientsSubtitles as subtitle, index}
 		<IngredientsContainer
@@ -123,6 +143,30 @@
 		margin-top: 2rem;
 	}
 
+	.titleContainer{
+		display: flex;
+		width: 100%;
+	}
+
+	label{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		background-color: var(--neutral-white);
+		color: rgb(60, 59, 59);
+		width: 50%;
+		height: 5rem;
+		border-radius: 0.5rem;
+		border: 1px solid;
+		background-size: cover;
+		background-position: center;
+	}
+	#upload-photo{
+		opacity: 0;
+		position: absolute;
+		z-index: -1;
+	}
 	.buttonContainer{
 		width: 100%;
 		display: flex;

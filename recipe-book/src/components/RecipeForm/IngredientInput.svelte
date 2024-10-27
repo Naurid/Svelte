@@ -2,10 +2,6 @@
 	/**
 	 * @type {string}
 	 */
-	 export let ingredient_subtitle = '';
-	/**
-	 * @type {string}
-	 */
 	export let ingredient_name = '';
 	/**
 	 * @type {any}
@@ -14,6 +10,8 @@
 
 	export let ingredientIndex;
 	export let subtitleIndex;
+
+	let quantityType= ['g', 'units', 'l', 'ml', 'kg'];
 </script>
 
 <div class="ingredientContainer">
@@ -34,7 +32,11 @@
 			bind:value={ingredient_quantity}
 			placeholder="Type the desired quantity here in grams..."
 		/>
-		<p>g</p>
+		<select name="recipe[subtitle][{subtitleIndex}][ingredients][{ingredientIndex}][ingredient_type]" id="quantity">
+			{#each quantityType as type}
+				<option value="{type}">{type}</option>
+			{/each}
+		</select>
 	</div>
 </div>
 
