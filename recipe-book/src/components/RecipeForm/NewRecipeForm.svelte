@@ -1,7 +1,6 @@
 <script>
 	import { sendXHR } from '../../utils/requester';
 	import Button from '../Button.svelte';
-	import IngredientInput from './IngredientInput.svelte';
 	import IngredientsContainer from './IngredientsContainer.svelte';
 	import StepsForm from './StepsForm.svelte';
 	import TitleForm from './TitleForm.svelte';
@@ -27,6 +26,7 @@
 			...ingredientsSubtitles,
 			{ subtitle: 'subtitle' + ingredientsSubtitles.length }
 		];
+		console.log("oi");
 	};
 
 	/**
@@ -67,7 +67,7 @@
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
-	<TitleForm bind:title={recipeTitle} />
+	<TitleForm bind:recipeTitle={recipeTitle} />
 	<!--  make a component out of this (ingredientslist and ingredientssubtitles in there) -->
 	{#each ingredientsSubtitles as subtitle, index}
 		<IngredientsContainer
@@ -76,8 +76,8 @@
 		/>
 	{/each}
 	<div class="buttonContainer">
-		<Button type="button" on:click={addIngredientsField}>Add ingredients sublist</Button>
-		<Button type="button" on:click={removeIngredientsField}>Remove last ingredients sublist</Button>
+		<Button type="button" onClick={addIngredientsField}>Add ingredients sublist</Button>
+		<Button type="button" onClick={removeIngredientsField}>Remove last ingredients sublist</Button>
 	</div>
 	<div class="container">
 		{#each stepscontainers as container, index}
@@ -85,8 +85,8 @@
 		{/each}
 	</div>
 	<div class="buttonContainer">
-		<Button type="button" on:click={addStepsField}>Add step</Button>
-		<Button type="button" on:click={removeStepsField}>Remove step</Button>
+		<Button type="button" onClick={addStepsField}>Add step</Button>
+		<Button type="button" onClick={removeStepsField}>Remove step</Button>
 	</div>	
 	<div class="submitContainer">
 		<Button type="submit" tabindex="-1">Create Recipe</Button>
@@ -95,7 +95,6 @@
 </form>
 
 <style>
-	@import '../../main_style.css';
 
 	form {
 		width: 50%;
@@ -105,12 +104,12 @@
 		justify-content: center;
 		align-items: center;
 		gap: 2%;
-		background-color: var(--form-background-color);
+		background-color: var(--main-container-color);
 		margin-top: 5%;
 		padding: 25px;
 
 		border-radius: 16px;
-		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 4px 30px var(--box-shadow-color);
 		backdrop-filter: blur(5px);
 		-webkit-backdrop-filter: blur(5px);
 		border: 1px solid rgba(255, 255, 255, 0.3);

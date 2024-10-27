@@ -1,0 +1,33 @@
+:root{
+    /* Navbar colors */
+    --nav-bg:rgb(9, 180, 43);
+    --nav-text:rgb(255, 255, 255);
+    --nav-text-active:lime;
+
+     /* Recipe Containers Colors */
+     --main-container-color:rgb(172, 253, 171);
+     --ingredient-container-color:rgb(248, 251, 104);
+     --ingredient-sublist-container-color:white;
+     --steps-container-color:white;
+     --recipe-text-color:rgb(0, 0, 0);   
+
+      /* Button colors */
+      --button-active: #2fff00;
+      --button-active-hover: #c8ff00;
+      --button-text-active: black;
+      --button-text-active-hover: black;
+
+
+    /* --neutral-white: #ffffff;
+    --neutral-grey: #A7A7A7;
+
+    --button-active: #F3B18C;
+    --button-active-hover: #ef6515;
+    --button-text-active: #4A4A4A;
+    --button-text-active-hover: #FDF6E3;
+
+    --container-background:#FDF6E3; */
+    --bg: rgb(221, 255, 221);
+
+    --box-shadow-color: rgb(128, 207, 129);
+}

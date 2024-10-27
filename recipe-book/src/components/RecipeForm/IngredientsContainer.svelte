@@ -32,8 +32,8 @@
 			class="ingredientsSubtitle"
 			value={subtitle.subtitle}
 		/>
-		<Button on:click={addIngredient}>Add ingredient</Button>
-		<Button on:click={removeIngredient}>Remove last ingredient</Button>
+		<Button onClick={addIngredient}>Add ingredient</Button>
+		<Button onClick={removeIngredient}>Remove last ingredient</Button>
 	</div>
 	<!--  make a component out of this (ingredientslist in there) -->
 	<div class="ingredientsContainer">

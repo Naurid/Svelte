@@ -1,8 +1,20 @@
 <script>
-	import ListofRecipes from "../../components/ListofRecipes.svelte";
 
-
-
+	import ListofRecipes from '../../components/ListofRecipes.svelte';
+	import NavBar from '../../components/NavBar.svelte';
 </script>
 
-<ListofRecipes/>
+<div class="mainBody">
+	<NavBar />
+	<ListofRecipes />
+</div>
+
+<style>
+	.mainBody {
+		background-color: var(--bg);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100vh;
+	}
+</style>
