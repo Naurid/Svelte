@@ -78,7 +78,7 @@
 	async function handleSubmit(event) {
 		console.log("submit");
 
-		//const request = await sendXHR('/create-recipe', {}, event);
+		const request = await sendXHR('/create-recipe', {}, event);
 	}
 </script>
 
@@ -86,7 +86,7 @@
 	<div class="titleContainer">
 		<TitleForm bind:recipeTitle={recipeTitle} />
 		<label style="background-image: url({imageURL});" for="upload-photo">Browse...</label>
-		<input type="file" accept="image/png, image/jpg, image/jpeg" id="upload-photo" bind:value={imageURL} on:change={handleImageChange}/>
+		<input name="recipePicture" type="file" accept="image/png, image/jpg, image/jpeg" id="upload-photo" bind:value={imageURL} on:change={handleImageChange}/>
 	</div>
 	<!--  make a component out of this (ingredientslist and ingredientssubtitles in there) -->
 	{#each ingredientsSubtitles as subtitle, index}
