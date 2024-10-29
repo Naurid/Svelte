@@ -6,20 +6,8 @@
 <style>
 	
 	h1 {
-		font-size: 2.5rem;
-		font-family:
-			system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			'Segoe UI',
-			Roboto,
-			Oxygen,
-			Ubuntu,
-			Cantarell,
-			'Open Sans',
-			'Helvetica Neue',
-			sans-serif;
-		color: var(--nav-text);
+		font-size: 2rem;	
+		color: var(--navbar-font-color);
 		margin-right: auto;
 		padding-left: 25px;
 		padding-right: 25px;
@@ -29,7 +17,7 @@
 		text-decoration: none;
 	}
 	.navBody a:hover h1{
-		color: var(--nav-text-active);
+		color: var(--navbar-hover-font-color);
 	}
 
 	.navBody {
@@ -39,13 +27,12 @@
         position: fixed;
         top: 0;
         left: 0;
-		background-color: var(--nav-bg);
 		width: 100vw;
 		height: 7%;
 		z-index: 1;
 		backdrop-filter: blur(5px);
 		-webkit-backdrop-filter: blur(5px);
-		box-shadow: 0 0 10px var(--nav-bg);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.619);
 	}
 
 </style>

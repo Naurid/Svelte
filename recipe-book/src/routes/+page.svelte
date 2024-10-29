@@ -16,7 +16,6 @@
 		align-items: center;
 		height: auto; /* Ensure height is not fixed */
 		overflow: auto; /* Allow page scrolling */
-		background-color: var(--bg);
 		padding-top: 1rem;
 		padding-bottom: 5rem;
 	}

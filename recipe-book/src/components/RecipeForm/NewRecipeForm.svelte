@@ -23,26 +23,26 @@
 
 	let imageURL = '';
 
-	const handleImageChange =(/** @type {{ target: { files: any[]; }; }} */ event)=>{
+	const handleImageChange = (/** @type {{ target: { files: any[]; }; }} */ event) => {
 		const file = event.target.files[0];
-		
+
 		if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        imageURL = reader.result; // Update the imageUrl with the base64 data URL
-      };
-      reader.readAsDataURL(file);
-    } else {
-      alert('Please select a valid image file.');
-    }
-	}
+			const reader = new FileReader();
+			reader.onload = () => {
+				imageURL = reader.result; // Update the imageUrl with the base64 data URL
+			};
+			reader.readAsDataURL(file);
+		} else {
+			alert('Please select a valid image file.');
+		}
+	};
 
 	const addIngredientsField = () => {
 		ingredientsSubtitles = [
 			...ingredientsSubtitles,
 			{ subtitle: 'subtitle' + ingredientsSubtitles.length }
 		];
-		console.log("oi");
+		console.log('oi');
 	};
 
 	/**
@@ -76,24 +76,47 @@
 	 * @param {any} event
 	 */
 	async function handleSubmit(event) {
-		console.log("submit");
+		console.log('submit');
 
 		const request = await sendXHR('/create-recipe', {}, event);
+	}
+
+	// State to hold the YouTube URL and video ID
+	let youtubeUrl = '';
+	let videoId = '';
+
+	// Function to extract video ID from the YouTube URL
+	function extractVideoId(url) {
+		const regex =
+			/(?:https?:\/\/)?(?:www\.)?youtu(?:be\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|\.be\/)([a-zA-Z0-9_-]{11})/;
+		const match = url.match(regex);
+		return match ? match[1] : null;
+	}
+
+	// Update videoId whenever the URL changes
+	function handleUrlChange() {
+		videoId = extractVideoId(youtubeUrl);
 	}
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
 	<div class="titleContainer">
-		<TitleForm bind:recipeTitle={recipeTitle} />
-		<label style="background-image: url({imageURL});" for="upload-photo">Browse...</label>
-		<input name="recipePicture" type="file" accept="image/png, image/jpg, image/jpeg" id="upload-photo" bind:value={imageURL} on:change={handleImageChange}/>
+		<input
+			name="recipePicture"
+			type="file"
+			accept="image/png, image/jpg, image/jpeg"
+			id="upload-photo"
+			bind:value={imageURL}
+			on:change={handleImageChange}
+		/>
+		<label style="background-image: url({imageURL});" for="upload-photo">{imageURL? '' : 'Browse...'}</label>
+		<TitleForm bind:recipeTitle />
+		
+		
 	</div>
 	<!--  make a component out of this (ingredientslist and ingredientssubtitles in there) -->
 	{#each ingredientsSubtitles as subtitle, index}
-		<IngredientsContainer
-			{index}
-			{subtitle}
-		/>
+		<IngredientsContainer {index} {subtitle} />
 	{/each}
 	<div class="buttonContainer">
 		<Button type="button" onClick={addIngredientsField}>Add ingredients sublist</Button>
@@ -107,28 +130,45 @@
 	<div class="buttonContainer">
 		<Button type="button" onClick={addStepsField}>Add step</Button>
 		<Button type="button" onClick={removeStepsField}>Remove step</Button>
-	</div>	
+	</div>
+	<div class="videoInput">
+		<input
+			type="text"
+			bind:value={youtubeUrl}
+			placeholder="Enter YouTube URL"
+			on:input={handleUrlChange}
+		/>
+		{#if videoId}
+			<iframe
+				width="560"
+				height="315"
+				src={`https://www.youtube.com/embed/${videoId}`}
+				title="YouTube video player"
+				frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				allowfullscreen
+			></iframe>
+		{:else}
+			<p>Please enter a valid YouTube URL</p>
+		{/if}
+	</div>
 	<div class="submitContainer">
 		<Button type="submit" tabindex="-1">Create Recipe</Button>
-	</div>	
-	
+	</div>
 </form>
 
 <style>
-
 	form {
-		width: 50%;
+		width: 75%;
 		height: auto;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		gap: 2%;
-		background-color: var(--main-container-color);
+		gap: 1rem;
+		background-color: var(--form-bg);
 		margin-top: 5%;
 		padding: 25px;
-
-		border-radius: 16px;
 		box-shadow: 0 4px 30px var(--box-shadow-color);
 		backdrop-filter: blur(5px);
 		-webkit-backdrop-filter: blur(5px);
@@ -143,31 +183,60 @@
 		margin-top: 2rem;
 	}
 
-	.titleContainer{
+	.titleContainer {
 		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 1rem;
 		width: 100%;
+		height: 100%;
 	}
 
-	label{
+	label {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
-		background-color: var(--neutral-white);
-		color: rgb(60, 59, 59);
+		color: var(--white);
 		width: 50%;
-		height: 5rem;
-		border-radius: 0.5rem;
+		height: 15rem;
 		border: 1px solid;
 		background-size: cover;
 		background-position: center;
 	}
-	#upload-photo{
+
+	.videoInput{
+		width: 100%;
+		height: 30rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-evenly;
+		gap: 1rem;
+		padding: 25px 25px;
+	}
+
+	.videoInput input{
+		width: 30%;
+		height: 100%;
+	}
+
+	.videoInput iframe{
+		width: 40%;
+		height: 700%;
+	}
+	.videoInput p{
+		width: 40%;
+		height: 700%;
+	}
+
+	#upload-photo {
 		opacity: 0;
 		position: absolute;
 		z-index: -1;
 	}
-	.buttonContainer{
+	.buttonContainer {
 		width: 100%;
 		display: flex;
 		justify-content: center;
@@ -175,11 +244,22 @@
 		margin-top: 1rem;
 	}
 
-	.submitContainer{
+	.submitContainer {
 		width: 60%;
 		display: flex;
 		justify-content: center;
 		gap: 5%;
 		margin-top: 3rem;
+	}
+
+	input {
+		width: 80%;
+		height: 5rem;
+		border: 1px solid var(--white);
+		background-color: transparent;
+		padding-left: 1rem;
+		text-align: center;
+		color: var(--white);
+		font-size: 100%;
 	}
 </style>

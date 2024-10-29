@@ -24,16 +24,15 @@
 	button {
 		width: 100%;
 		height: 3rem;
-		background-color: var(--button-active);
+		background-color: var(--white);
 		border: none;
-		border-radius: .5rem;
 		color: var(--button-text-active);
 		font-size: 1.2rem;
 		cursor: pointer;
 	}
     button:hover {
-		background-color: var(--button-active-hover);
-        color: var(--button-text-active-hover);
+		background-color: var(--navbar-hover-font-color);
+        color: var(--navbar-font-color);
 	}
 
 </style>
