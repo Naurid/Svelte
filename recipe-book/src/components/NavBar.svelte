@@ -29,7 +29,8 @@
         left: 0;
 		width: 100vw;
 		height: 7%;
-		z-index: 1;
+		z-index: 10000;
+		background-color: var(--bg);
 		backdrop-filter: blur(5px);
 		-webkit-backdrop-filter: blur(5px);
 		border-bottom: 1px solid rgba(255, 255, 255, 0.619);

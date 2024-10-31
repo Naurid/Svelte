@@ -1,6 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import { sendXHR } from '../utils/requester';
+	import RecipeDisplay from './RecipeDisplay.svelte';
+	import { apiUrl } from '../Constants';
 
 	/**
 	 * @type {any[]}
@@ -21,113 +23,83 @@
 		}
 	});
 
-	/**
-	 * @type {any}
-	 */
-	let currentSubtitle;
-
-	/**
-	 * @param {any[]} ingredients
-	 */
-	function getUniqueSubtitles(ingredients) {
-		/**
-		 * @type {any[]}
-		 */
-		const uniqueSubtitles = [];
-		ingredients.forEach((/** @type {{ subtitle: any; }} */ ingredient) => {
-			if (
-				uniqueSubtitles.length === 0 ||
-				uniqueSubtitles[uniqueSubtitles.length - 1] !== ingredient.subtitle
-			) {
-				uniqueSubtitles.push(ingredient.subtitle);
-			}
-		});
-		return uniqueSubtitles;
-	}
-
-	const displayRecipe = (recipe) => {
-		currentRecipeTitle = recipe.name;
+	const displayRecipe = (/** @type {any} */ recipe) => {
+		currentRecipe = recipe;
 		showRecipe = true;
 	};
 
 	let showRecipe = false;
 
-	let currentRecipeTitle = '';
+	/**
+	 * @type {any}
+	 */
+	let currentRecipe;
+
+	const closeRecipe = () => {
+		showRecipe = false;
+	};
 </script>
 
 <div class="mainBody">
 	{#each recipes as recipe}
-		<div class="recipeCard">
-			<button
-				on:click={() => {
-					displayRecipe(recipe);
-				}}>{recipe.name}</button
-			>
-		</div>
-	{/each}
-{#if showRecipe}
-	
-<div class="recipe">
-	<h1>{currentRecipeTitle}</h1>
-</div>
-{/if}
-</div>
+		<button
+			class="recipeCard"
+			on:click={() => {
+				displayRecipe(recipe);
+			}}
+		>
+			<img src="{apiUrl}{recipe.image_path}" alt={recipe.name} />
 
-<!-- <div class="recipeBody">
-			<h1>{recipe.name}</h1>
-			<h2>Ingredients</h2>
-			<div class="ingredientsContainer">
-				{#each getUniqueSubtitles(recipe.ingredients) as subtitle}
-					<div class="ingredientSublist">
-						<h3>{subtitle}</h3>
-						{#each recipe.ingredients.filter((/** @type {{ subtitle: any; }} */ ingredient) => ingredient.subtitle === subtitle) as ingredient}
-							<div class="ingredientContainer">
-								<p>{ingredient.name}</p>
-								<p>{ingredient.quantity} g</p>
-							</div>
-						{/each}
-					</div>
-				{/each}
-			</div>
-			<h2>Preparation</h2>
-			<div class="stepsContainer">
-				{#each recipe['steps'] as step}
-					<div class="stepContainer">
-						<h3>{step.step_position}. {step.steps_title}</h3>
-						<p>{step.steps_description}</p>
-					</div>
-				{/each}
-			</div>
-		</div> -->
+			<div class="info">{recipe.name}</div>
+		</button>
+		<RecipeDisplay {recipe} bind:showRecipe onClose={closeRecipe} />
+	{/each}
+</div>
 
 <style>
 	.mainBody {
-		width: 95vw;
+		width: 100%;
+		height: 100%;
 		display: flex;
 		justify-content: flex-start;
 		align-items: flex-start;
 		gap: 5%;
-		margin-top: 5%;
+		margin-top: 5rem;
 	}
 	.recipeCard {
-		width: 800px;
-		height: 600px;
+		margin: 6% 0 0 36%;
+		position: relative;
+		width: 25%;
+		border: none;
+		padding: 0;
+		cursor: pointer;
 	}
-	button {
-		width: 100%;
+	button:hover .info {
 		height: 100%;
 	}
-	.recipe {
-		position: fixed;
-		top: 0;
+
+	button img {
+		display: block;
+		width: 100%;
+		object-fit: cover;
+	}
+
+	.info {
+		position: absolute;
+		bottom: 0;
 		left: 0;
 		right: 0;
-		bottom: 0;
-		background: rgb(255, 255, 255);
+		background: rgba(0, 0, 0, 0.7);
+		color: #fff;
+		overflow: hidden;
+		width: 100%;
+		height: 0;
 		display: flex;
-		justify-content: center;
+		flex-direction: column;
 		align-items: center;
-		z-index: 1000;
+		justify-content: center;
+		font-size: 3rem;
+		transition: 0.5s ease;
 	}
 	/* 
 	h1 {
