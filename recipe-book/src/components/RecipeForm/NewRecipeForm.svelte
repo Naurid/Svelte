@@ -133,6 +133,7 @@
 	</div>
 	<div class="videoInput">
 		<input
+			name="recipe[videoURL]"
 			type="text"
 			bind:value={youtubeUrl}
 			placeholder="Enter YouTube URL"

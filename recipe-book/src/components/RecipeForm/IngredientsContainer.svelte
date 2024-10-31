@@ -39,7 +39,7 @@
 	<div class="ingredientsContainer">
 		{#each ingredients as container, ingredientIndex}
 				<IngredientInput
-					bind:ingredient_subtitle={subtitle.subtitle}
+					ingredient_subtitle={subtitle.subtitle}
 					bind:ingredient_name={container.name}
 					bind:ingredient_quantity={container.quantity}
 					subtitleIndex={index}

@@ -6,7 +6,8 @@ header('Content-Type: application/json');
 $inputData = $_POST;
 
 $recipeId = $db->create('recipes', [
-    'name' => $_POST['recipe']['title']
+    'name' => $_POST['recipe']['title'],
+    'video_url' => $_POST['recipe']['videoURL'],
 ]);
 
 // Vérifie si un fichier a bien été uploadé
@@ -59,13 +60,6 @@ if (isset($_FILES['recipePicture']) && $_FILES['recipePicture']['error'] === 0) 
     ], ['id' => $recipeId]);
 
 }
-
-
-
-
-
-
-
 
 foreach ($_POST['recipe']['subtitle'] as $subtitle) {
     $subtitleName = $subtitle['name'];

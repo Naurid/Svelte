@@ -44,11 +44,36 @@
 		});
 		return uniqueSubtitles;
 	}
+
+	const displayRecipe = (recipe) => {
+		currentRecipeTitle = recipe.name;
+		showRecipe = true;
+	};
+
+	let showRecipe = false;
+
+	let currentRecipeTitle = '';
 </script>
 
 <div class="mainBody">
 	{#each recipes as recipe}
-		<div class="recipeBody">
+		<div class="recipeCard">
+			<button
+				on:click={() => {
+					displayRecipe(recipe);
+				}}>{recipe.name}</button
+			>
+		</div>
+	{/each}
+{#if showRecipe}
+	
+<div class="recipe">
+	<h1>{currentRecipeTitle}</h1>
+</div>
+{/if}
+</div>
+
+<!-- <div class="recipeBody">
 			<h1>{recipe.name}</h1>
 			<h2>Ingredients</h2>
 			<div class="ingredientsContainer">
@@ -73,46 +98,9 @@
 					</div>
 				{/each}
 			</div>
-		</div>
-	{/each}
-</div>
+		</div> -->
 
 <style>
-
-	h1 {
-		color: var(--recipe-text-color);
-		font-family:
-			system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			'Segoe UI',
-			Roboto,
-			Oxygen,
-			Ubuntu,
-			Cantarell,
-			'Open Sans',
-			'Helvetica Neue',
-			sans-serif;
-	}
-	h2{
-		color: var(--recipe-text-color);
-		font-family:
-			system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			'Segoe UI',
-			Roboto,
-			Oxygen,
-			Ubuntu,
-			Cantarell,
-			'Open Sans',
-			'Helvetica Neue',
-			sans-serif;
-		padding-left: 2rem;
-		text-decoration: solid underline var(--recipe-text-color);
-		align-self: flex-start;
-	}
-
 	.mainBody {
 		width: 95vw;
 		display: flex;
@@ -121,6 +109,38 @@
 		gap: 5%;
 		margin-top: 5%;
 	}
+	.recipeCard {
+		width: 800px;
+		height: 600px;
+	}
+	button {
+		width: 100%;
+		height: 100%;
+	}
+	.recipe {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgb(255, 255, 255);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 1000;
+	}
+	/* 
+	h1 {
+		color: var(--white);
+	}
+	h2{
+		color: var(--white);
+		padding-left: 2rem;
+		text-decoration: solid underline var(--recipe-text-color);
+		align-self: flex-start;
+	}
+
+	
 
 	.recipeBody {
 		background-color: var(--main-container-color);
@@ -176,34 +196,10 @@
     h3{
         margin: 0;
         padding-top: 15px;
-		color: var(--recipe-text-color);
-		font-family:
-			system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			'Segoe UI',
-			Roboto,
-			Oxygen,
-			Ubuntu,
-			Cantarell,
-			'Open Sans',
-			'Helvetica Neue',
-			sans-serif;
+		color: var(--white);
     }
 
 	p{
-		color: var(--recipe-text-color);
-		font-family:
-			system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			'Segoe UI',
-			Roboto,
-			Oxygen,
-			Ubuntu,
-			Cantarell,
-			'Open Sans',
-			'Helvetica Neue',
-			sans-serif;
-	}
+		color: var(--white);
+	} */
 </style>
