@@ -78,7 +78,6 @@ for ($i = 0; $i < count($_POST['recipe']['steps']); $i++) {
         $db->create('steps', [
             'recipe_id' => $recipeId,
             'step_position' => $i + 1,
-            'steps_title' => $step['title'],
             'steps_description' => $step['content']
         ]);
     }

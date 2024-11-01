@@ -1,5 +1,4 @@
 <script>
-	export let title = '';
 	export let content = '';
 	export let stepIndex;
 
@@ -14,13 +13,6 @@
 </script>
 
 <div class="container">
-	<input
-		name="recipe[steps][{stepIndex}][title]"
-		type="text"
-		class="stepTitle"
-		bind:value={title}
-		placeholder="Type the name of the step here"
-	/>
 	<textarea
 		on:input={textAreaAdjust}
 		name="recipe[steps][{stepIndex}][content]"
@@ -38,14 +30,6 @@
 		align-items: flex-start;
 		gap: 1rem;
 		width: 100%;
-	}
-
-	.stepTitle {
-		width: 75%;
-		height: 3rem;
-		border-radius: 0.5rem;
-		border: 1px solid;
-		padding-left: 1rem;
 	}
 
 	.stepContent {

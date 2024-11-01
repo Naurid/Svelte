@@ -124,7 +124,7 @@
 	</div>
 	<div class="container">
 		{#each stepscontainers as container, index}
-			<StepsForm bind:title={container.title} bind:content={container.content} stepIndex={index} />
+			<StepsForm  bind:content={container.content} stepIndex={index} />
 		{/each}
 	</div>
 	<div class="buttonContainer">

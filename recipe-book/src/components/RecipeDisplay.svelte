@@ -1,7 +1,16 @@
 <script>
+	import { apiUrl } from '../Constants';
+	import { sendXHR } from '../utils/requester';
+	import TitleForm from './RecipeForm/TitleForm.svelte';
+
+	/**
+	 * @type {{ [x: string]: any; video_url: any; name: any; ingredients: any[]; }}
+	 */
 	export let recipe;
 
 	export let showRecipe = false;
+
+	let editingRecipe = true;
 
 	export let onClose = () => {};
 
@@ -26,23 +35,41 @@
 
 	let videoId = extractVideoId(recipe.video_url);
 
+	/**
+	 * @param {string} url
+	 */
 	function extractVideoId(url) {
 		const regex =
 			/(?:https?:\/\/)?(?:www\.)?youtu(?:be\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|\.be\/)([a-zA-Z0-9_-]{11})/;
 		const match = url.match(regex);
 		return match ? match[1] : null;
 	}
-</script>
 
-<!-- {#if showRecipe}
-		<div class="recipe" on:click={onClose}>
-			<div class="container" on:click|stopPropagation>
-				<button class="closebutton" on:click={onClose}>X</button>
-				<h1>{recipe.name}</h1>
-				<p>Some random text here</p>
-			</div>
-		</div>
-	{/if} -->
+	function handleUrlChange() {
+		videoId = extractVideoId(recipe.video_url);
+	}
+
+	async function handleSubmit(event) {
+		console.log('submit');
+		const request = await sendXHR('/edit-recipe', {}, event);
+	}
+
+	let imageURL = '';
+
+	const handleImageChange = (/** @type {{ target: { files: any[]; }; }} */ event) => {
+		const file = event.target.files[0];
+
+		if (file && file.type.startsWith('image/')) {
+			const reader = new FileReader();
+			reader.onload = () => {
+				imageURL = reader.result; // Update the imageUrl with the base64 data URL
+			};
+			reader.readAsDataURL(file);
+		} else {
+			alert('Please select a valid image file.');
+		}
+	};
+</script>
 
 {#if showRecipe}
 	<!-- Use role="dialog" and aria-modal="true" for accessibility -->
@@ -52,45 +79,113 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div class="recipeBody" on:click|stopPropagation>
 			<button class="close-button" on:click={onClose} type="button">x</button>
-			<h1 class="recipeTitle">{recipe.name}</h1>
-			{#if videoId}
-				<div class="videoContainer">
-					<iframe
-						width="560"
-						height="315"
-						src={`https://www.youtube.com/embed/${videoId}`}
-						title="YouTube video player"
-						frameborder="0"
-						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-						allowfullscreen
-					></iframe>
+			{#if !editingRecipe}
+				<h1 class="recipeTitle">{recipe.name}</h1>
+				{#if videoId}
+					<div class="videoContainer">
+						<iframe
+							width="560"
+							height="315"
+							src={`https://www.youtube.com/embed/${videoId}`}
+							title="YouTube video player"
+							frameborder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+							allowfullscreen
+						></iframe>
+					</div>
+				{/if}
+				<h2>Ingredients</h2>
+				<div class="ingredientsContainer">
+					{#each getUniqueSubtitles(recipe.ingredients) as subtitle}
+						<div class="ingredientSublist">
+							<h3>{subtitle}</h3>
+							{#each recipe.ingredients.filter((/** @type {{ subtitle: any; }} */ ingredient) => ingredient.subtitle === subtitle) as ingredient}
+								<div class="ingredientContainer">
+									<p>{ingredient.name}</p>
+									<p>{ingredient.quantity}</p>
+									<p>{ingredient.ingredient_type}</p>
+								</div>
+							{/each}
+						</div>
+					{/each}
 				</div>
-			{/if}
-			<h2>Ingredients</h2>
-			<div class="ingredientsContainer">
-				{#each getUniqueSubtitles(recipe.ingredients) as subtitle}
-					<div class="ingredientSublist">
-						<h3>{subtitle}</h3>
-						{#each recipe.ingredients.filter((/** @type {{ subtitle: any; }} */ ingredient) => ingredient.subtitle === subtitle) as ingredient}
-							<div class="ingredientContainer">
-								<p>{ingredient.name}</p>
-								<p>{ingredient.quantity} g</p>
+				<h2>Preparation</h2>
+				<div class="stepsContainer">
+					{#each recipe['steps'] as step}
+						<div class="stepContainer">
+							<h3>{step.step_position}. {step.steps_description}</h3>
+						</div>
+					{/each}
+				</div>
+			{:else}
+				<form on:submit|preventDefault={handleSubmit}>
+					<div class="titleDiv">
+						<input class="recipeTitle" type="text" value={recipe.name} />
+						
+						<input
+						name="recipePicture"
+						type="file"
+						accept="image/png, image/jpg, image/jpeg"
+						id="upload-photo"
+						bind:value={imageURL}
+						on:change={handleImageChange}
+					/>
+					<label style="background-image: url({`${apiUrl}${recipe.image_path}`});" for="upload-photo">{`${apiUrl}${recipe.image_path}`? '' : 'Browse...'}</label>
+					</div>
+					<div class="videoInput">
+						<input
+							name="recipe[videoURL]"
+							type="text"
+							value={recipe.video_url}
+							placeholder="Enter YouTube URL"
+							on:input={handleUrlChange}
+						/>
+						{#if videoId}
+							<iframe
+								width="560"
+								height="315"
+								src={`https://www.youtube.com/embed/${videoId}`}
+								title="YouTube video player"
+								frameborder="0"
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+								allowfullscreen
+							></iframe>
+						{:else}
+							<p>Please enter a valid YouTube URL</p>
+						{/if}
+					</div>
+					<h2>Ingredients</h2>
+					<div class="ingredientsContainer">
+						{#each getUniqueSubtitles(recipe.ingredients) as subtitle}
+							<div class="ingredientSublist">
+								<input type="text" value={subtitle} />
+								{#each recipe.ingredients.filter((/** @type {{ subtitle: any; }} */ ingredient) => ingredient.subtitle === subtitle) as ingredient}
+									<div class="ingredientContainer">
+										<input type="text" value={ingredient.name} />
+										<input type="text" value={ingredient.quantity} />
+										<input type="text" value={ingredient.ingredient_type} />
+									</div>
+								{/each}
 							</div>
 						{/each}
 					</div>
-				{/each}
-			</div>
-			<h2>Preparation</h2>
-			<div class="stepsContainer">
-				{#each recipe['steps'] as step}
-					<div class="stepContainer">
-						<h3>{step.step_position}. {step.steps_title}</h3>
-						<p>{step.steps_description}</p>
+					<h2>Preparation</h2>
+					<div class="stepsContainer">
+						{#each recipe['steps'] as step}
+							<div class="stepContainer">
+								<h3>{step.step_position}.</h3>
+								<textarea value={step.steps_description} />
+							</div>
+						{/each}
 					</div>
-				{/each}
-			</div>
+					<button type="submit">Save</button>
+				</form>
+			{/if}
 		</div>
 	</div>
+{/if}
+{#if showRecipe && editingRecipe}
+	<div></div>
 {/if}
 
 <style>
@@ -110,7 +205,7 @@
 	}
 	.recipeBody {
 		max-height: 95%;
-    	overflow-y: auto; 
+		overflow-y: auto;
 		background: var(--white);
 		width: 60%;
 		padding: 20px;
@@ -138,7 +233,7 @@
 		width: 50%;
 		display: flex;
 		flex-direction: column;
-        padding-left: 1rem;
+		padding-left: 1rem;
 	}
 	.ingredientContainer {
 		display: flex;
@@ -155,6 +250,6 @@
 	}
 	.videoContainer {
 		display: flex;
-        justify-content: center;
+		justify-content: center;
 	}
 </style>
