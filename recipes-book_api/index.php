@@ -11,7 +11,10 @@ require 'utils/database.php';
 require 'utils/response.php';
 
 if (!array_key_exists($requesturl, $config)){
-    echo'error';
+finish([
+        'responseCode'=>404,
+        'message'=> "la route $requesturl n'a pas ete trouve !",
+]);
     exit;
 }
 

@@ -5,7 +5,9 @@
 
 <div class="mainBody">
 	<NavBar />
+	<div class="container">
 	<Form/>
+</div>
 </div>
 
 <style>
@@ -18,5 +20,8 @@
 		overflow: auto; /* Allow page scrolling */
 		padding-top: 1rem;
 		padding-bottom: 5rem;
+	}
+	.container{
+		width: 75%;
 	}
 </style>

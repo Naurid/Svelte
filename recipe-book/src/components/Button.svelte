@@ -24,9 +24,9 @@
 	button {
 		width: 100%;
 		height: 3rem;
-		background-color: var(--white);
+		background-color: var(--bg);
 		border: none;
-		color: var(--button-text-active);
+		color: var(--white);
 		font-size: 1.2rem;
 		cursor: pointer;
 	}

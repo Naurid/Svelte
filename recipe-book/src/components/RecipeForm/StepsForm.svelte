@@ -1,6 +1,7 @@
 <script>
 	export let content = '';
 	export let stepIndex;
+	export let stepId ='';
 
 	/**
 	 * @param {{ target: any; }} event
@@ -20,6 +21,7 @@
 		bind:value={content}
 		placeholder="Type the content of the step here"
 	/>
+	<input name="recipe[steps][{stepIndex}][Id]" type="hidden" value={stepId}/>
 </div>
 
 <style>
@@ -35,18 +37,6 @@
 	.stepContent {
 		width: 95%;
 		height: 6rem;
-		font-family:
-			system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			'Segoe UI',
-			Roboto,
-			Oxygen,
-			Ubuntu,
-			Cantarell,
-			'Open Sans',
-			'Helvetica Neue',
-			sans-serif;
 		overflow: hidden;
 		border-radius: 0.5rem;
 		border: 1px solid;

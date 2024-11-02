@@ -7,8 +7,8 @@ $config = [
     "/create-recipe"=>[
         'path'=> "./routes/create-recipe.php"
     ],
-    "/edit-recipes"=>[
-        'path'=> "./routes/edit-recipes.php"
+    "/edit-recipe"=>[
+        'path'=> "./routes/edit-recipe.php"
     ],
 ];
 

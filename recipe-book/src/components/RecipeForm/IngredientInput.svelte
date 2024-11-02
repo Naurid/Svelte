@@ -8,7 +8,7 @@
 	 */
 	export let ingredient_quantity = '';
 
-	export let ingredientIndex;
+	export let ingredientID;
 	export let subtitleIndex;
 
 	let quantityType = ['g', 'units', 'l', 'ml', 'kg'];
@@ -18,7 +18,7 @@
 	<div class="subContainer">
 		<p>Ingredient:</p>
 		<input
-			name="recipe[subtitle][{subtitleIndex}][ingredients][{ingredientIndex}][name]"
+			name="recipe[subtitle][{subtitleIndex}][ingredients][{ingredientID}][name]"
 			type="text"
 			bind:value={ingredient_name}
 			placeholder="Type the name of the ingredient here.."
@@ -27,14 +27,14 @@
 	<div class="subContainer">
 		<p>Quantity:</p>
 		<input
-			name="recipe[subtitle][{subtitleIndex}][ingredients][{ingredientIndex}][quantity]"
+			name="recipe[subtitle][{subtitleIndex}][ingredients][{ingredientID}][quantity]"
 			type="number"
 			bind:value={ingredient_quantity}
 			placeholder="Type the desired quantity here in grams..."
 			min="0"
 		/>
 		<select
-			name="recipe[subtitle][{subtitleIndex}][ingredients][{ingredientIndex}][ingredient_type]"
+			name="recipe[subtitle][{subtitleIndex}][ingredients][{ingredientID}][ingredient_type]"
 			id="quantity"
 		>	
 			{#each quantityType as type}

@@ -1,6 +1,7 @@
 <script>
 	import { apiUrl } from '../Constants';
 	import { sendXHR } from '../utils/requester';
+	import NewRecipeForm from './RecipeForm/NewRecipeForm.svelte';
 	import TitleForm from './RecipeForm/TitleForm.svelte';
 
 	/**
@@ -45,10 +46,17 @@
 		return match ? match[1] : null;
 	}
 
+	/**
+	 * @param {string} videoURL
+	 */
+	let videoURL= recipe.video_url;
 	function handleUrlChange() {
-		videoId = extractVideoId(recipe.video_url);
+		videoId = extractVideoId(videoURL);
 	}
 
+	/**
+	 * @param {any} event
+	 */
 	async function handleSubmit(event) {
 		console.log('submit');
 		const request = await sendXHR('/edit-recipe', {}, event);
@@ -118,77 +126,17 @@
 					{/each}
 				</div>
 			{:else}
-				<form on:submit|preventDefault={handleSubmit}>
-					<div class="titleDiv">
-						<input class="recipeTitle" type="text" value={recipe.name} />
-						
-						<input
-						name="recipePicture"
-						type="file"
-						accept="image/png, image/jpg, image/jpeg"
-						id="upload-photo"
-						bind:value={imageURL}
-						on:change={handleImageChange}
-					/>
-					<label style="background-image: url({`${apiUrl}${recipe.image_path}`});" for="upload-photo">{`${apiUrl}${recipe.image_path}`? '' : 'Browse...'}</label>
-					</div>
-					<div class="videoInput">
-						<input
-							name="recipe[videoURL]"
-							type="text"
-							value={recipe.video_url}
-							placeholder="Enter YouTube URL"
-							on:input={handleUrlChange}
-						/>
-						{#if videoId}
-							<iframe
-								width="560"
-								height="315"
-								src={`https://www.youtube.com/embed/${videoId}`}
-								title="YouTube video player"
-								frameborder="0"
-								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-								allowfullscreen
-							></iframe>
-						{:else}
-							<p>Please enter a valid YouTube URL</p>
-						{/if}
-					</div>
-					<h2>Ingredients</h2>
-					<div class="ingredientsContainer">
-						{#each getUniqueSubtitles(recipe.ingredients) as subtitle}
-							<div class="ingredientSublist">
-								<input type="text" value={subtitle} />
-								{#each recipe.ingredients.filter((/** @type {{ subtitle: any; }} */ ingredient) => ingredient.subtitle === subtitle) as ingredient}
-									<div class="ingredientContainer">
-										<input type="text" value={ingredient.name} />
-										<input type="text" value={ingredient.quantity} />
-										<input type="text" value={ingredient.ingredient_type} />
-									</div>
-								{/each}
-							</div>
-						{/each}
-					</div>
-					<h2>Preparation</h2>
-					<div class="stepsContainer">
-						{#each recipe['steps'] as step}
-							<div class="stepContainer">
-								<h3>{step.step_position}.</h3>
-								<textarea value={step.steps_description} />
-							</div>
-						{/each}
-					</div>
-					<button type="submit">Save</button>
-				</form>
+			<NewRecipeForm recipe = {recipe} ingredientsSubtitles = {getUniqueSubtitles(recipe.ingredients)}/>
 			{/if}
 		</div>
-	</div>
+	</div> 
 {/if}
 {#if showRecipe && editingRecipe}
 	<div></div>
 {/if}
 
 <style>
+	/* show recipe */
 	.overlay {
 		position: fixed;
 		top: 0;

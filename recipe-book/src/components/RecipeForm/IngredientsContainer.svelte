@@ -1,19 +1,18 @@
 <script>
 	import Button from '../Button.svelte';
 	import IngredientInput from './IngredientInput.svelte';
-    import { createEventDispatcher } from 'svelte';
 
 	export let index;
 	/**
-	 * @type {{ subtitle: any; }}
+	 * @type {any}
 	 */
     export let subtitle;
     /**
 	 * @type {any[]}
 	 */
-    let ingredients = [];
+    export let ingredients = [];
 
-     function addIngredient() {
+     function addIngredient(){
 		ingredients = [...ingredients, { subtitle: subtitle, name: '', quantity: '' }];
 	}
  
@@ -30,7 +29,7 @@
 			name="recipe[subtitle][{index}][name]"
 			type="text"
 			class="ingredientsSubtitle"
-			value={subtitle.subtitle}
+			value={subtitle}
 		/>
 		<Button onClick={addIngredient}>Add ingredient</Button>
 		<Button onClick={removeIngredient}>Remove last ingredient</Button>
@@ -39,11 +38,11 @@
 	<div class="ingredientsContainer">
 		{#each ingredients as container, ingredientIndex}
 				<IngredientInput
-					ingredient_subtitle={subtitle.subtitle}
+					ingredient_subtitle={subtitle}
 					bind:ingredient_name={container.name}
 					bind:ingredient_quantity={container.quantity}
 					subtitleIndex={index}
-					ingredientIndex={ingredientIndex + 'i'}
+					ingredientID={container.Id}
 				/>
 		{/each}
 	</div>

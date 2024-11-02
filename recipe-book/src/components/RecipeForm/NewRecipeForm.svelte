@@ -1,26 +1,30 @@
 <script>
+	import { apiUrl } from '../../Constants';
 	import { sendXHR } from '../../utils/requester';
 	import Button from '../Button.svelte';
 	import IngredientsContainer from './IngredientsContainer.svelte';
 	import StepsForm from './StepsForm.svelte';
 	import TitleForm from './TitleForm.svelte';
 
-	let recipeTitle = '';
+	/**
+	 * @type {any}
+	 */
+	export let recipe = null;
+
+	let recipeTitle = recipe?.name ?? '';
 	/**
 	 * @type {any[]}
 	 */
-	let ingredientsSubtitles = [];
+	export let ingredientsSubtitles = [];
 
 	/**
 	 * @type {any[]}
 	 */
-	let ingredients = [];
+	let stepscontainers = recipe?.steps ?? [];
 
 	/**
-	 * @type {any[]}
+	 * @type {any}
 	 */
-	let stepscontainers = [];
-
 	let imageURL = '';
 
 	const handleImageChange = (/** @type {{ target: { files: any[]; }; }} */ event) => {
@@ -45,22 +49,9 @@
 		console.log('oi');
 	};
 
-	/**
-	 * @param {{ detail: { text: any; }; }} event
-	 */
-	function addIngredient(event) {
-		let subtitle = event.detail.text.subtitle;
-		ingredients = [...ingredients, { subtitle: subtitle, name: '', quantity: '' }];
-	}
-
 	const removeIngredientsField = () => {
 		ingredientsSubtitles = [...ingredientsSubtitles];
 		ingredientsSubtitles.splice(ingredientsSubtitles.length - 1, 1);
-	};
-
-	const removeIngredient = () => {
-		ingredients = [...ingredients];
-		ingredients.splice(ingredients.length - 1, 1);
 	};
 
 	const addStepsField = () => {
@@ -78,14 +69,17 @@
 	async function handleSubmit(event) {
 		console.log('submit');
 
-		const request = await sendXHR('/create-recipe', {}, event);
+		const request = await sendXHR(recipe == null ? '/create-recipe' : '/edit-recipe', {}, event);
 	}
 
 	// State to hold the YouTube URL and video ID
-	let youtubeUrl = '';
-	let videoId = '';
+	let youtubeUrl = recipe?.video_url ?? '';
+	let videoId = recipe?.video_url? extractVideoId(recipe?.video_url): '';
 
 	// Function to extract video ID from the YouTube URL
+	/**
+	 * @param {any} url
+	 */
 	function extractVideoId(url) {
 		const regex =
 			/(?:https?:\/\/)?(?:www\.)?youtu(?:be\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -100,7 +94,9 @@
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
+	<input name="recipeID" class="hiddenID" value={recipe?.id}/>
 	<div class="titleContainer">
+		<TitleForm bind:recipeTitle />
 		<input
 			name="recipePicture"
 			type="file"
@@ -109,14 +105,22 @@
 			bind:value={imageURL}
 			on:change={handleImageChange}
 		/>
-		<label style="background-image: url({imageURL});" for="upload-photo">{imageURL? '' : 'Browse...'}</label>
-		<TitleForm bind:recipeTitle />
-		
+		<label style="background-image: url({`${imageURL}` == ''
+								? `${apiUrl}${recipe?.image_path}`
+								: `${imageURL}`});" for="upload-photo"
+			>{`${apiUrl}${recipe?.image_path}` || `${imageURL}` ? '' : 'Browse...'}</label
+		>
 		
 	</div>
 	<!--  make a component out of this (ingredientslist and ingredientssubtitles in there) -->
 	{#each ingredientsSubtitles as subtitle, index}
-		<IngredientsContainer {index} {subtitle} />
+		<IngredientsContainer
+			{index}
+			{subtitle}
+			ingredients={recipe?.ingredients.filter(
+				(/** @type {{ subtitle: any; }} */ ingredient) => ingredient.subtitle === subtitle
+			)}
+		/>
 	{/each}
 	<div class="buttonContainer">
 		<Button type="button" onClick={addIngredientsField}>Add ingredients sublist</Button>
@@ -124,7 +128,7 @@
 	</div>
 	<div class="container">
 		{#each stepscontainers as container, index}
-			<StepsForm  bind:content={container.content} stepIndex={index} />
+			<StepsForm bind:content={container.steps_description} stepIndex={index} stepId={container.Id} />
 		{/each}
 	</div>
 	<div class="buttonContainer">
@@ -154,22 +158,25 @@
 		{/if}
 	</div>
 	<div class="submitContainer">
-		<Button type="submit" tabindex="-1">Create Recipe</Button>
+		<Button type="submit" tabindex="-1">{recipe ?  'Save Changes': 'Create Recipe'}</Button>
 	</div>
 </form>
 
 <style>
+	.hiddenID{
+		display: none;
+	}
 	form {
-		width: 75%;
+		width: 100%;
 		height: auto;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		gap: 1rem;
-		background-color: var(--form-bg);
+		background-color: var(--white);
 		margin-top: 5%;
-		padding: 25px;
+		padding: 25px 25px;
 		box-shadow: 0 4px 30px var(--box-shadow-color);
 		backdrop-filter: blur(5px);
 		-webkit-backdrop-filter: blur(5px);
@@ -189,45 +196,38 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		gap: 1rem;
 		width: 100%;
-		height: 100%;
+		height: 30rem;
+		gap: 1rem;
 	}
 
 	label {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		color: var(--white);
 		width: 50%;
-		height: 15rem;
-		border: 1px solid;
-		background-size: cover;
-		background-position: center;
+		height: 500%;
+		cursor: pointer;
+		background-size: contain; /* Keeps the image's aspect ratio */
+		background-repeat: no-repeat; /* Prevents tiling */
+		background-position: center; /* Centers the image in the label */
 	}
 
-	.videoInput{
-		width: 100%;
-		height: 30rem;
+	.videoInput {
 		display: flex;
+		width: 100%;
+		height: 25rem;
 		flex-direction: column;
 		align-items: center;
-		justify-content: space-evenly;
 		gap: 1rem;
-		padding: 25px 25px;
 	}
 
-	.videoInput input{
-		width: 30%;
-		height: 100%;
+	.videoInput input {
+		width: 40%;
 	}
 
-	.videoInput iframe{
+	.videoInput iframe {
 		width: 40%;
 		height: 700%;
 	}
-	.videoInput p{
+	.videoInput p {
 		width: 40%;
 		height: 700%;
 	}
@@ -256,11 +256,11 @@
 	input {
 		width: 80%;
 		height: 5rem;
-		border: 1px solid var(--white);
+		border: 1px solid var(--black);
 		background-color: transparent;
 		padding-left: 1rem;
 		text-align: center;
-		color: var(--white);
+		color: var(--black);
 		font-size: 100%;
 	}
 </style>

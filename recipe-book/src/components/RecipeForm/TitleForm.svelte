@@ -18,14 +18,11 @@
     }
 
 	input {
-		width: 80%;
-		height: 5rem;
-		border: 1px solid var(--white);
-		background-color: transparent;
-		padding-left: 1rem;
+		width: 60%;
+		height: 100%;
+		font-size: 2.5rem;
+		font-weight: 500;
 		text-align: center;
-		color: var(--white);
-		font-size: 200%;
 	}
 	
 </style>
