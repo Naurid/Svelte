@@ -10,6 +10,9 @@ $config = [
     "/edit-recipe"=>[
         'path'=> "./routes/edit-recipe.php"
     ],
+    "/delete-recipe"=>[
+        'path'=> "./routes/delete-recipe.php"
+    ],
 ];
 
 $serverConfig = [

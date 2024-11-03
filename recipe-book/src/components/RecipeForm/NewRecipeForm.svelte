@@ -91,6 +91,10 @@
 	function handleUrlChange() {
 		videoId = extractVideoId(youtubeUrl);
 	}
+
+	async function deleteRecipe(){
+		const request = await sendXHR('/delete-recipe', {'recipeID' : recipe.id});
+	}
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
@@ -159,6 +163,7 @@
 	</div>
 	<div class="submitContainer">
 		<Button type="submit" tabindex="-1">{recipe ?  'Save Changes': 'Create Recipe'}</Button>
+		{#if recipe}<Button onClick={deleteRecipe}>Delete Recipe</Button>{/if}
 	</div>
 </form>
 

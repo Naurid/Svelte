@@ -1,6 +1,7 @@
 <script>
 	import { apiUrl } from '../Constants';
 	import { sendXHR } from '../utils/requester';
+	import Button from './Button.svelte';
 	import NewRecipeForm from './RecipeForm/NewRecipeForm.svelte';
 	import TitleForm from './RecipeForm/TitleForm.svelte';
 
@@ -11,7 +12,7 @@
 
 	export let showRecipe = false;
 
-	let editingRecipe = true;
+	let editingRecipe = false;
 
 	export let onClose = () => {};
 
@@ -49,7 +50,7 @@
 	/**
 	 * @param {string} videoURL
 	 */
-	let videoURL= recipe.video_url;
+	let videoURL = recipe.video_url;
 	function handleUrlChange() {
 		videoId = extractVideoId(videoURL);
 	}
@@ -77,6 +78,8 @@
 			alert('Please select a valid image file.');
 		}
 	};
+
+	
 </script>
 
 {#if showRecipe}
@@ -126,13 +129,17 @@
 					{/each}
 				</div>
 			{:else}
-			<NewRecipeForm recipe = {recipe} ingredientsSubtitles = {getUniqueSubtitles(recipe.ingredients)}/>
+				<NewRecipeForm {recipe} ingredientsSubtitles={getUniqueSubtitles(recipe.ingredients)} />
 			{/if}
+			<div>
+				<Button
+					onClick={() => {
+						editingRecipe = !editingRecipe;
+					}}>{editingRecipe ? 'Cancel edition' : 'Edit recipe'}</Button
+				>
+			</div>
 		</div>
-	</div> 
-{/if}
-{#if showRecipe && editingRecipe}
-	<div></div>
+	</div>
 {/if}
 
 <style>
