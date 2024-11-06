@@ -58,18 +58,18 @@
 
 <style>
 	.mainBody {
-		width: 100%;
+		width: 95%;
 		height: 100%;
 		display: flex;
 		justify-content: flex-start;
 		align-items: flex-start;
-		gap: 5%;
 		margin-top: 5rem;
+		gap: 2%;
+		padding: 2% 2%;
 	}
 	.recipeCard {
-		margin: 6% 0 0 36%;
 		position: relative;
-		width: 25%;
+		width: 12%;
 		border: none;
 		padding: 0;
 		cursor: pointer;

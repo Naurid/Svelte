@@ -6,6 +6,13 @@ header('Content-Type: application/json');
 $inputData = $_POST;
 $recipeID = $inputData['recipeID'];
 
+//Ajouter les champs en plus si il y en a
+//check si il y a plus d'ingredients ou pas
+// $ingredientsForm = $_POST['recipe']['subtitle'];
+// echo $ingredientsForm;
+// $ingredientsDB = $db->read('ingredients','*', ['recipe_id'=>$recipeID]);
+// echo $ingredientsDB;
+
 $db->update('recipes',[
     'name'=>$inputData['recipe']['title'],
     'video_url'=> $inputData['recipe']['videoURL'],
@@ -75,6 +82,22 @@ foreach ($_POST['recipe']['subtitle'] as $subtitle) {
         ], ['id'=> $key]);
     }
 }
+
+foreach ($_POST['recipe']['subtitle'] as $subtitle) {
+    $subtitleName = $subtitle['name'];
+    foreach ($subtitle['ingredients'] as $key => $ingredient) {
+        $isitset = $key != 'undefined'; 
+        if($isitset) continue;
+        $db->create('ingredients', [
+            'recipe_id' => $recipeID,
+            'subtitle' => $subtitleName,
+            'name' => $ingredient['name'],
+            'quantity' => $ingredient['quantity'],
+            'ingredient_type' => $ingredient['ingredient_type']
+        ]);
+    }
+}
+
 for ($i = 0; $i < count($_POST['recipe']['steps']); $i++) {
     $step = $_POST['recipe']['steps'][$i];
     $stepID = $step['Id'];
@@ -83,8 +106,17 @@ for ($i = 0; $i < count($_POST['recipe']['steps']); $i++) {
             'step_position' => $i + 1,
             'steps_description' => $step['content']
         ],['id'=> $stepID]);
-    
-    # code...
+}
+
+for ($i = 0; $i < count($_POST['recipe']['steps']); $i++) {
+    $step = $_POST['recipe']['steps'][$i];
+    $stepID = $step['Id'];
+    if($stepID == 'undefined') continue;
+        $db->create('steps', [
+            'recipe_id' => $recipeID,
+            'step_position' => $i + 1,
+            'steps_description' => $step['content']
+        ]);
 }
 
 finish([
