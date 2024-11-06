@@ -67,9 +67,8 @@
 	 * @param {any} event
 	 */
 	async function handleSubmit(event) {
-		console.log('submit');
-
 		const request = await sendXHR(recipe == null ? '/create-recipe' : '/edit-recipe', {}, event);
+		window.location.reload();
 	}
 
 	// State to hold the YouTube URL and video ID
@@ -97,7 +96,7 @@
 	}
 </script>
 
-<form on:submit|preventDefault={handleSubmit}>
+<form on:submit={handleSubmit}>
 	<input name="recipeID" class="hiddenID" value={recipe?.id}/>
 	<div class="titleContainer">
 		<TitleForm bind:recipeTitle />

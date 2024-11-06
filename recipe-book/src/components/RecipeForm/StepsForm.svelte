@@ -41,5 +41,7 @@
 		border-radius: 0.5rem;
 		border: 1px solid;
 		padding: 15px;
+		font-family: 'Karla', Arial, sans-serif;
+		font-size: 1rem;
 	}
 </style>

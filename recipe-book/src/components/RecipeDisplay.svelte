@@ -1,9 +1,6 @@
 <script>
-	import { apiUrl } from '../Constants';
-	import { sendXHR } from '../utils/requester';
 	import Button from './Button.svelte';
 	import NewRecipeForm from './RecipeForm/NewRecipeForm.svelte';
-	import TitleForm from './RecipeForm/TitleForm.svelte';
 
 	/**
 	 * @type {{ [x: string]: any; video_url: any; name: any; ingredients: any[]; }}
@@ -46,40 +43,6 @@
 		const match = url.match(regex);
 		return match ? match[1] : null;
 	}
-
-	/**
-	 * @param {string} videoURL
-	 */
-	let videoURL = recipe.video_url;
-	function handleUrlChange() {
-		videoId = extractVideoId(videoURL);
-	}
-
-	/**
-	 * @param {any} event
-	 */
-	async function handleSubmit(event) {
-		console.log('submit');
-		const request = await sendXHR('/edit-recipe', {}, event);
-	}
-
-	let imageURL = '';
-
-	const handleImageChange = (/** @type {{ target: { files: any[]; }; }} */ event) => {
-		const file = event.target.files[0];
-
-		if (file && file.type.startsWith('image/')) {
-			const reader = new FileReader();
-			reader.onload = () => {
-				imageURL = reader.result; // Update the imageUrl with the base64 data URL
-			};
-			reader.readAsDataURL(file);
-		} else {
-			alert('Please select a valid image file.');
-		}
-	};
-
-	
 </script>
 
 {#if showRecipe}
@@ -124,7 +87,8 @@
 				<div class="stepsContainer">
 					{#each recipe['steps'] as step}
 						<div class="stepContainer">
-							<h3>{step.step_position}. {step.steps_description}</h3>
+							<h3>{step.step_position}.</h3>
+							<p>{step.steps_description}</p>
 						</div>
 					{/each}
 				</div>
@@ -166,9 +130,17 @@
 		padding: 20px;
 		box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 		margin-top: 1rem;
+		position: relative; 
 	}
 	.close-button {
-		margin-top: 10px;
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		background-color: var(--bg);
+		border: none;
+		color: var(--white);
+		font-size: 1.2rem;
+		cursor: pointer;
 	}
 
 	.ingredientsContainer {
@@ -190,21 +162,42 @@
 		flex-direction: column;
 		padding-left: 1rem;
 	}
+
+	h3{
+		font-size: 1.5vw;
+	}
 	.ingredientContainer {
 		display: flex;
 		width: 100%;
 		gap: 1rem;
+		font-size: 1vw;
 	}
 
 	.recipeTitle {
 		text-align: center;
+		font-size: 3vw;
 	}
 
 	h2 {
 		text-decoration: underline solid var(--black) 1px;
+		font-size: 2vw;
 	}
 	.videoContainer {
 		display: flex;
 		justify-content: center;
+	}
+
+	.stepContainer{
+		display: flex;
+		width: 100%;
+		height: 100%;
+		gap: 1rem;
+	}
+
+	.stepContainer p{
+		display: flex;
+		width: 100%;
+		align-items: center;
+		font-size: 1vw;
 	}
 </style>

@@ -63,7 +63,7 @@
 	p {
 		text-align: start;
 		margin: 0;
-		color: var(--white);
+		color: var(--black);
 		font-size: 150%;
 	}
 
@@ -75,7 +75,7 @@
 		padding-left: 1rem;
 		text-align: center;
 		color: var(--white);
-		font-size: 100%;
+		font-size: 140%;
 	}
 
 	/* For Chrome, Safari, Edge, Opera */

@@ -98,6 +98,22 @@ foreach ($_POST['recipe']['subtitle'] as $subtitle) {
     }
 }
 
+$dbingredients = $db->read('ingredients', '*', ['recipe_id'=> $recipeID]);
+$formIngredientsIds = [];
+
+ foreach ($_POST['recipe']['subtitle'] as $subtitle) {
+    $subtitleName = $subtitle['name'];
+    foreach ($subtitle['ingredients'] as $key => $ingredient) {
+       array_push($formIngredientsIds, $key);
+    }
+}
+
+for ($i = 0; $i < count($dbingredients); $i++) {  
+    if(in_array( $dbingredients[$i]['Id'], $formIngredientsIds)) continue;
+    $db->delete('ingredients', ['Id'=>$dbingredients[$i]['Id']]);
+}
+
+
 for ($i = 0; $i < count($_POST['recipe']['steps']); $i++) {
     $step = $_POST['recipe']['steps'][$i];
     $stepID = $step['Id'];
@@ -108,15 +124,26 @@ for ($i = 0; $i < count($_POST['recipe']['steps']); $i++) {
         ],['id'=> $stepID]);
 }
 
+
 for ($i = 0; $i < count($_POST['recipe']['steps']); $i++) {
     $step = $_POST['recipe']['steps'][$i];
     $stepID = $step['Id'];
-    if($stepID == 'undefined') continue;
+    if($stepID != 'undefined') continue;
         $db->create('steps', [
             'recipe_id' => $recipeID,
             'step_position' => $i + 1,
             'steps_description' => $step['content']
         ]);
+}
+
+
+$dbSteps = $db->read('steps', '*', ['recipe_id'=> $recipeID]);
+$formStepsIds = array_column($_POST['recipe']['steps'], 'Id');
+
+for ($i = 0; $i < count($dbSteps); $i++) {
+    $step = $dbSteps[$i];
+    if(in_array($step['Id'], $formStepsIds)) continue;
+    $db->delete('steps', ['Id'=>$step['Id']]);
 }
 
 finish([
